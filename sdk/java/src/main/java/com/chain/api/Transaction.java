@@ -485,15 +485,15 @@ public class Transaction {
    * @param client client object which makes server requests
    * @param builders list of transaction builders
    * @return a list of transaction templates
-   * @throws APIException This exception is raised if the api returns errors while building transaction templates.
+   * @throws APIException This exception is raised if the api returns errors while processing the API request.
    * @throws BadURLException This exception wraps java.net.MalformedURLException.
    * @throws ConnectivityException This exception is raised if there are connectivity issues with the server.
    * @throws HTTPException This exception is raised when errors occur making http requests.
    * @throws JSONException This exception is raised due to malformed json requests or responses.
    */
-  public static BatchResponse<Template,APIException> buildBatch(
+  public static BatchResponse<Template,BuildException> buildBatch(
       Client client, List<Transaction.Builder> builders) throws ChainException {
-    return client.batchRequest("build-transaction", builders, Template.class, APIException.class);
+    return client.batchRequest("build-transaction", builders, Template.class, BuildException.class);
   }
 
   /**
@@ -995,14 +995,15 @@ public class Transaction {
      * Builds a single transaction template.
      * @param client client object which makes requests to the server
      * @return a transaction template
-     * @throws APIException This exception is raised if the api returns errors while building the transaction.
+     * @throws BuildException This exception is raised if one or more actions error during building.
+     * @throws APIException This exception is raised if the api returns errors processing the request.
      * @throws BadURLException This exception wraps java.net.MalformedURLException.
      * @throws ConnectivityException This exception is raised if there are connectivity issues with the server.
      * @throws HTTPException This exception is raised when errors occur making http requests.
      * @throws JSONException This exception is raised due to malformed json requests or responses.
      */
     public Template build(Client client) throws ChainException {
-      return client.singletonBatchRequest("build-transaction", Arrays.asList(this), Template.class, APIException.class);
+      return client.singletonBatchRequest("build-transaction", Arrays.asList(this), Template.class, BuildException.class);
     }
 
     /**
