@@ -491,9 +491,9 @@ public class Transaction {
    * @throws HTTPException This exception is raised when errors occur making http requests.
    * @throws JSONException This exception is raised due to malformed json requests or responses.
    */
-  public static BatchResponse<Template> buildBatch(
+  public static BatchResponse<Template,APIException> buildBatch(
       Client client, List<Transaction.Builder> builders) throws ChainException {
-    return client.batchRequest("build-transaction", builders, Template.class);
+    return client.batchRequest("build-transaction", builders, Template.class, APIException.class);
   }
 
   /**
@@ -507,11 +507,11 @@ public class Transaction {
    * @throws HTTPException This exception is raised when errors occur making http requests.
    * @throws JSONException This exception is raised due to malformed json requests or responses.
    */
-  public static BatchResponse<SubmitResponse> submitBatch(Client client, List<Template> templates)
+  public static BatchResponse<SubmitResponse,APIException> submitBatch(Client client, List<Template> templates)
       throws ChainException {
     HashMap<String, Object> body = new HashMap<>();
     body.put("transactions", templates);
-    return client.batchRequest("submit-transaction", body, SubmitResponse.class);
+    return client.batchRequest("submit-transaction", body, SubmitResponse.class, APIException.class);
   }
 
   /**
@@ -528,7 +528,7 @@ public class Transaction {
   public static SubmitResponse submit(Client client, Template template) throws ChainException {
     HashMap<String, Object> body = new HashMap<>();
     body.put("transactions", Arrays.asList(template));
-    return client.singletonBatchRequest("submit-transaction", body, SubmitResponse.class);
+    return client.singletonBatchRequest("submit-transaction", body, SubmitResponse.class, APIException.class);
   }
 
   /**
@@ -1002,7 +1002,7 @@ public class Transaction {
      * @throws JSONException This exception is raised due to malformed json requests or responses.
      */
     public Template build(Client client) throws ChainException {
-      return client.singletonBatchRequest("build-transaction", Arrays.asList(this), Template.class);
+      return client.singletonBatchRequest("build-transaction", Arrays.asList(this), Template.class, APIException.class);
     }
 
     /**

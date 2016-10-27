@@ -142,13 +142,13 @@ public class Client {
    * @return the result of the post request
    * @throws ChainException
    */
-  public <T> BatchResponse<T> batchRequest(String action, Object body, Type tClass)
+  public <T,E extends APIException> BatchResponse<T,E> batchRequest(String action, Object body, Type tClass, Type eClass)
       throws ChainException {
     return post(
         action,
         body,
         (Response response, Gson deserializer) ->
-            new BatchResponse(response, deserializer, tClass));
+            new BatchResponse(response, deserializer, tClass, eClass));
   }
 
   /**
@@ -167,15 +167,15 @@ public class Client {
    * @return the result of the post request
    * @throws ChainException
    */
-  public <T> T singletonBatchRequest(String action, Object body, Type tClass)
+  public <T,E extends APIException> T singletonBatchRequest(String action, Object body, Type tClass, Type eClass)
       throws ChainException {
     return post(
         action,
         body,
         (Response response, Gson deserializer) -> {
-          BatchResponse<T> batch = new BatchResponse(response, deserializer, tClass);
+          BatchResponse<T,E> batch = new BatchResponse(response, deserializer, tClass, eClass);
 
-          List<APIException> errors = batch.errors();
+          List<E> errors = batch.errors();
           if (errors.size() == 1) {
             // This throw must occur within this lambda in order for APIClient's
             // retry logic to take effect.
