@@ -13,7 +13,7 @@ public class BuildException extends APIException {
     }
 
     public static class ActionError extends APIException {
-        
+
         public ActionError(String message, String requestId) {
             super(message, requestId);
         }
